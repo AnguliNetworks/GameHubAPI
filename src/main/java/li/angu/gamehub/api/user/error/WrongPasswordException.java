@@ -1,8 +1,4 @@
-package li.angu.gamehub.api.user;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.Optional;
+package li.angu.gamehub.api.user.error;
 
 /*************************************************************************
  *
@@ -23,18 +19,10 @@ import java.util.Optional;
  *
  * This File belongs to the GameHubAPI from Anguli Networks
  */
-public interface UserRepository extends MongoRepository<User, String> {
+public class WrongPasswordException extends RuntimeException {
 
-    Optional<User> findByUsername(String username);
-
-    Optional<User> findByMail(String mail);
-
-    Optional<User> findById(String id);
-
-    boolean existsByIdAndSession(String id, String sessino);
-
-    boolean existsByUsername(String username);
-
-    boolean existsByMail(String mail);
+    public WrongPasswordException() {
+        super("Das eingegebene Passwort ist falsch.");
+    }
 
 }

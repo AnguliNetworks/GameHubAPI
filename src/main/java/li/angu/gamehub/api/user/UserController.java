@@ -1,8 +1,7 @@
 package li.angu.gamehub.api.user;
 
 import li.angu.gamehub.api.response.ApiSuccess;
-import li.angu.gamehub.api.user.error.MailAlreadyRegisteredException;
-import li.angu.gamehub.api.user.error.UsernameAlreadyRegisteredException;
+import li.angu.gamehub.api.user.error.*;
 import li.angu.gamehub.api.user.password.PasswordService;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,40 @@ public class UserController {
     @Autowired
     private PasswordService passwordService;
 
+    @RequestMapping(method = RequestMethod.POST, value = "/session-check", produces = "application/json")
+    public ResponseEntity<Object> login(@RequestParam String userId, @RequestParam String session) {
+
+        if (!userRepository.existsByIdAndSession(userId, session)) {
+            throw new SessionNotFoundException();
+        }
+
+        ApiSuccess success = new ApiSuccess(HttpStatus.ACCEPTED, "Du bist nun eingeloggt!");
+
+        return new ResponseEntity<>(success, new HttpHeaders(), success.getStatus());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/login", produces = "application/json")
+    public ResponseEntity<Object> login(@RequestParam(required = false) @Email String mail, @RequestParam(required = false) String username, @RequestParam String password) {
+        if (mail == null && username == null) {
+            throw new NoMailOrUsernameFoundException();
+        }
+
+        User user = (mail != null ? userRepository.findByMail(mail) : userRepository.findByUsername(username)).orElseThrow(() -> new UserNotFoundException(mail != null ? mail : username));
+
+        if (!this.passwordService.comparePassword(password, user.getPassword())) {
+            throw new WrongPasswordException();
+        }
+
+        user.generateSession();
+
+        userRepository.save(user);
+        user.obfuscatePassword();
+
+        ApiSuccess success = new ApiSuccess(HttpStatus.ACCEPTED, "Du bist nun angemeldet. Viel Spaß!", user);
+
+        return new ResponseEntity<>(success, new HttpHeaders(), success.getStatus());
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/register", produces = "application/json")
     public ResponseEntity<Object> register(@RequestParam @Email String mail, @RequestParam String username, @RequestParam String password) {
 
@@ -62,7 +95,7 @@ public class UserController {
         ApiSuccess success = new ApiSuccess(HttpStatus.CREATED, "Dein Account wurde angelegt. Jetzt noch schnell in Deine Mails schauen und auf den Link klicken :)");
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        //httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
 
         return new ResponseEntity<>(success, httpHeaders, success.getStatus());
     }

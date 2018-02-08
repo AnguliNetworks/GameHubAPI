@@ -25,6 +25,7 @@ public class ApiSuccess {
 
     private HttpStatus status;
     private String message;
+    private Object object;
 
     public ApiSuccess(String message) {
         this.status = HttpStatus.OK;
@@ -36,11 +37,21 @@ public class ApiSuccess {
         this.message = message;
     }
 
+    public ApiSuccess(HttpStatus status, String message, Object object) {
+        this.status = status;
+        this.message = message;
+        this.object = object;
+    }
+
     public HttpStatus getStatus() {
         return status;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public Object getObject() {
+        return object;
     }
 }

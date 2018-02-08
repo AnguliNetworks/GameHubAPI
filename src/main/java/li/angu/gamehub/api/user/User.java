@@ -2,6 +2,8 @@ package li.angu.gamehub.api.user;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.UUID;
+
 /*************************************************************************
  *
  * ANGULI NETWORKS CONFIDENTIAL
@@ -29,6 +31,7 @@ public class User {
     private String mail;
     private String username;
     private String password;
+    private String session;
 
     public User(String mail, String username, String password) {
         this.mail = mail;
@@ -37,6 +40,21 @@ public class User {
     }
 
     public User() {
+
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
+    public String generateSession() {
+        this.setSession(UUID.randomUUID().toString());
+
+        return this.getSession();
     }
 
     public String getId() {
@@ -61,6 +79,12 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public User obfuscatePassword() {
+        this.password = UUID.randomUUID().toString();
+
+        return this;
     }
 
     public String getPassword() {
