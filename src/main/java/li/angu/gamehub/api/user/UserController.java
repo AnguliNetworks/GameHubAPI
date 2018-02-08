@@ -94,9 +94,6 @@ public class UserController {
 
         ApiSuccess success = new ApiSuccess(HttpStatus.CREATED, "Dein Account wurde angelegt. Jetzt noch schnell in Deine Mails schauen und auf den Link klicken :)");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        //httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-
-        return new ResponseEntity<>(success, httpHeaders, success.getStatus());
+        return new ResponseEntity<>(success, new HttpHeaders(), success.getStatus());
     }
 }
