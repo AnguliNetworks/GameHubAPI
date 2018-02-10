@@ -30,3 +30,5 @@ mvnw.cmd
 
 ### MongoDB ###
 db-data
+
+application-*.properties

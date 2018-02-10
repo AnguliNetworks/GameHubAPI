@@ -1,5 +1,7 @@
 package li.angu.gamehub.api.user;
 
+import li.angu.gamehub.api.mail.MailService;
+import li.angu.gamehub.api.mail.templates.SignUpConfirmationTemplate;
 import li.angu.gamehub.api.response.ApiSuccess;
 import li.angu.gamehub.api.user.error.*;
 import li.angu.gamehub.api.user.password.PasswordService;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /*************************************************************************
  *
@@ -40,6 +45,9 @@ public class UserController {
 
     @Autowired
     private PasswordService passwordService;
+
+    @Autowired
+    private MailService mailService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/session-check", produces = "application/json")
     public ResponseEntity<Object> login(@RequestParam String userId, @RequestParam String session) {
@@ -90,7 +98,11 @@ public class UserController {
 
         userRepository.save(new User(mail, username, passwordService.encodePassword(password)));
 
-        // TODO ADD MAIL
+        Map<String, String> values = new HashMap<>();
+        // TODO ADD CONFIRMATION
+        values.put("confirmationId", "123");
+
+        mailService.sendMail(mail, "Bestätige deinen GameHubOne Account", new SignUpConfirmationTemplate().getHTML(values));
 
         ApiSuccess success = new ApiSuccess(HttpStatus.CREATED, "Dein Account wurde angelegt. Jetzt noch schnell in Deine Mails schauen und auf den Link klicken :)");
 

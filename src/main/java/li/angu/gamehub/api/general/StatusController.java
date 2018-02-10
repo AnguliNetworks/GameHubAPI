@@ -1,5 +1,6 @@
 package li.angu.gamehub.api.general;
 
+import li.angu.gamehub.api.mail.MailService;
 import li.angu.gamehub.api.response.ApiSuccess;
 import li.angu.gamehub.api.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
