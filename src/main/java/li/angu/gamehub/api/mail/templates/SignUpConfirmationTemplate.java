@@ -99,7 +99,7 @@ public class SignUpConfirmationTemplate implements MailTemplate {
         content.addChildren(logo);
         content.addChildren(new HTMLObject("h1", "Registrierungsbestätigung").setAttribute("class", "title"));
         content.addChildren(new HTMLObject("p", "Cool! Du hast es fast geschafft. Nur noch kurz auf diesen Link hier drücken und Dein Konto bei GameHubOne ist erstellt."));
-        content.addChildren(new HTMLObject("a", "Mail bestätigen").setAttribute("class", "button").setAttribute("href", "https://api.gamehub.one/confirmation/register/" + values.get("confirmationId")));
+        content.addChildren(new HTMLObject("a", "Mail bestätigen").setAttribute("class", "button").setAttribute("href", "https://api.gamehub.one/confirm/registration/" + values.get("confirmationId")));
 
         HTMLObject info = new HTMLObject("p");
         info.setAttribute("class", "info");

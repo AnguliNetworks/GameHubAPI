@@ -1,0 +1,79 @@
+$small-device: "only screen and (max-width: 725px)";
+$medium-device: "only screen and (max-width: 1068px)";
+
+@mixin container($large, $medium, $small) {
+  max-width: $large;
+  margin: 0 auto;
+
+  @media #{$medium-device} {
+    max-width: $medium;
+  }
+
+  @media #{$small-device} {
+    width: $small;
+  }
+}
+
+@mixin default-container() {
+  @include container(980px, 698px, 95%);
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  background-color: #ddd;
+  @include default-container();
+  padding-top: 47px;
+}
+
+div.panel {
+  background-color: #fff;
+  text-align: center;
+  color: rgb(153, 153, 153);
+  border: 1px solid rgb(230, 230, 230);
+  padding: 10px 30px;
+  margin-bottom: 20px;
+
+  h1.title {
+    color: #000;
+    font-weight: 400;
+  }
+
+  p {
+    text-align: left;
+
+    &.error {
+      color: rgb(255, 59, 47);
+    }
+
+    &.success {
+      color: rgb(76, 217, 100);
+    }
+
+    &.info {
+      margin: 10px 0 10px;
+
+      a {
+        font-weight: 600;
+        text-decoration: none;
+
+        &.black {
+          color: #606061;
+
+          &:hover {
+            color: #2e2e2f;
+          }
+        }
+
+        &.blue {
+          color: #007AFF;
+          font-weight: 400;
+
+          &:hover {
+            color: #0068cd;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,8 @@
 package li.angu.gamehub.api.user;
 
+import li.angu.gamehub.api.confirmation.Confirmation;
+import li.angu.gamehub.api.confirmation.ConfirmationRepository;
+import li.angu.gamehub.api.confirmation.ConfirmationType;
 import li.angu.gamehub.api.mail.MailService;
 import li.angu.gamehub.api.mail.templates.SignUpConfirmationTemplate;
 import li.angu.gamehub.api.response.ApiSuccess;
@@ -49,6 +52,9 @@ public class UserController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private ConfirmationRepository confirmationRepository;
+
     @RequestMapping(method = RequestMethod.POST, value = "/session-check", produces = "application/json")
     public ResponseEntity<Object> login(@RequestParam String userId, @RequestParam String session) {
 
@@ -68,6 +74,10 @@ public class UserController {
         }
 
         User user = (mail != null ? userRepository.findByMail(mail) : userRepository.findByUsername(username)).orElseThrow(() -> new UserNotFoundException(mail != null ? mail : username));
+
+        if (user.getSession() == null) {
+            throw new AccountNotConfirmedException();
+        }
 
         if (!this.passwordService.comparePassword(password, user.getPassword())) {
             throw new WrongPasswordException();
@@ -96,13 +106,18 @@ public class UserController {
 
         passwordService.isSecure(password);
 
-        userRepository.save(new User(mail, username, passwordService.encodePassword(password)));
+        User user = new User(mail, username, passwordService.encodePassword(password));
+
+        userRepository.save(user);
 
         Map<String, String> values = new HashMap<>();
-        // TODO ADD CONFIRMATION
-        values.put("confirmationId", "123");
+        Confirmation confirmation = new Confirmation(ConfirmationType.REGISTRATION, user);
 
-        mailService.sendMail(mail, "Bestätige deinen GameHubOne Account", new SignUpConfirmationTemplate().getHTML(values));
+        confirmationRepository.save(confirmation);
+
+        values.put("confirmationId", confirmation.getId());
+
+        mailService.sendMail(mail, "Bestätige Deinen GameHubOne Account", new SignUpConfirmationTemplate().getHTML(values));
 
         ApiSuccess success = new ApiSuccess(HttpStatus.CREATED, "Dein Account wurde angelegt. Jetzt noch schnell in Deine Mails schauen und auf den Link klicken :)");
 

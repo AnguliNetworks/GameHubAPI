@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" content="GameHubOne"/>
+    <title>GameHubOne - Bestätigung</title>
+
+    <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+
+</head>
+<!--/*@thymesVar id="type" type="li.angu.gamehub.api.confirmation.ConfirmationType"*/-->
+<!--/*@thymesVar id="message" type="java.lang.String"*/-->
+<body>
+<div class="panel">
+    <h1 class="title">Bestätigung</h1>
+
+    <p th:text="${message}">
+        Huch, leider ist ein Fehler aufgetreten. Versuche es später erneut!
+    </p>
+</div>
+</body>
+</html>
