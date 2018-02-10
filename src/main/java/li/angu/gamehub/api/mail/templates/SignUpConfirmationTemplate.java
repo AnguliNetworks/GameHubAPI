@@ -2,7 +2,6 @@ package li.angu.gamehub.api.mail.templates;
 
 import li.angu.gamehub.api.mail.html.HTMLObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /*************************************************************************
@@ -98,7 +97,7 @@ public class SignUpConfirmationTemplate implements MailTemplate {
                         "hwAAAABJRU5ErkJggg==");
 
         content.addChildren(logo);
-        content.addChildren(new HTMLObject("h1", "Anmeldungsbestätigung").setAttribute("class", "title"));
+        content.addChildren(new HTMLObject("h1", "Registrierungsbestätigung").setAttribute("class", "title"));
         content.addChildren(new HTMLObject("p", "Cool! Du hast es fast geschafft. Nur noch kurz auf diesen Link hier drücken und Dein Konto bei GameHubOne ist erstellt."));
         content.addChildren(new HTMLObject("a", "Mail bestätigen").setAttribute("class", "button").setAttribute("href", "https://api.gamehub.one/confirmation/register/" + values.get("confirmationId")));
 
