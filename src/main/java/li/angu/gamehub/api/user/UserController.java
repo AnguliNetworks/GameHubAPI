@@ -73,7 +73,7 @@ public class UserController {
             throw new NoMailOrUsernameFoundException();
         }
 
-        User user = (mail != null ? userRepository.findByMail(mail) : userRepository.findByUsername(username)).orElseThrow(() -> new UserNotFoundException(mail != null ? mail : username));
+        User user = (mail != null ? userRepository.findByMailIgnoreCase(mail) : userRepository.findByUsernameIgnoreCase(username)).orElseThrow(() -> new UserNotFoundException(mail != null ? mail : username));
 
         if (user.getSession() == null) {
             throw new AccountNotConfirmedException();
@@ -96,11 +96,11 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, value = "/register", produces = "application/json")
     public ResponseEntity<Object> register(@RequestParam @Email String mail, @RequestParam String username, @RequestParam String password) {
 
-        if (userRepository.existsByMail(mail)) {
+        if (userRepository.existsByMailIgnoreCase(mail)) {
             throw new MailAlreadyRegisteredException(mail);
         }
 
-        if (userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsernameIgnoreCase(username)) {
             throw new UsernameAlreadyRegisteredException(username);
         }
 

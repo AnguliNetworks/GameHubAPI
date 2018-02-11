@@ -25,16 +25,16 @@ import java.util.Optional;
  */
 public interface UserRepository extends MongoRepository<User, String> {
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsernameIgnoreCase(String username);
 
-    Optional<User> findByMail(String mail);
+    Optional<User> findByMailIgnoreCase(String mail);
 
     Optional<User> findById(String id);
 
     boolean existsByIdAndSession(String id, String sessino);
 
-    boolean existsByUsername(String username);
+    boolean existsByUsernameIgnoreCase(String username);
 
-    boolean existsByMail(String mail);
+    boolean existsByMailIgnoreCase(String mail);
 
 }
